@@ -27,7 +27,7 @@ object PowerCoverageUpdater {
             }
         }
 
-        // ok now let's set all buildings to powered that were in teh grid list...
+        // ok now let's set all buildings to powered that were in the grid list...
         map.locations().forEach { location ->
             location.building.powered = gridmap.containsKey(location.coordinate)
         }
