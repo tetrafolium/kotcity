@@ -36,7 +36,6 @@ data class NavigationNode(
     }
 }
 
-
 data class Path(
     val nodes: List<NavigationNode> = emptyList()
 ) {

@@ -68,7 +68,6 @@ class LaunchScreenApp : App(LaunchScreen::class, KotcityStyles::class) {
             it.consume()
         }
     }
-
 }
 
 fun main(args: Array<String>) {

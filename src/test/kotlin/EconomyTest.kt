@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test
 class EconomyTest {
     @Test
     fun economyTest() {
-        val map = CityMap.flatMap(256,256)
+        val map = CityMap.flatMap(256, 256)
         val assetManager = AssetManager(map)
         val jobCenter = assetManager.buildingFor(Civic::class, "job_center")
         assert(jobCenter.currentQuantityForSale(Tradeable.LABOR) >= 2)

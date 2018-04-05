@@ -16,8 +16,6 @@ import kotlinx.coroutines.experimental.withTimeout
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
-import kotlin.reflect.KClass
-
 
 const val DEFAULT_DESIRABILITY = 0.0
 
@@ -463,7 +461,6 @@ data class CityMap(var width: Int = 512, var height: Int = 512) {
                             val otherEntity = CityTradeEntity(otherCoords, otherBuilding)
                             otherBuilding.voidContractsWith(otherEntity)
                         }
-
                     }
                     // gotta remove building from the list...
                     val iterator = buildingLayer.iterator()
@@ -530,7 +527,6 @@ data class CityMap(var width: Int = 512, var height: Int = 512) {
             } else {
                 null
             }
-
         }.toBlocking().toIterable().filterNotNull()
     }
 

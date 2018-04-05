@@ -277,7 +277,6 @@ class Residential(override val cityMap: CityMap) : LoadableBuilding(cityMap) {
     }
 
     override var borderColor: Color = Color.GREEN
-
 }
 
 class Commercial(override val cityMap: CityMap) : LoadableBuilding(cityMap) {

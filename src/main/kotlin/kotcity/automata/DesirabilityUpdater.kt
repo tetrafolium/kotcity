@@ -4,8 +4,7 @@ import kotcity.data.*
 import kotcity.pathfinding.Pathfinder
 import kotcity.util.Debuggable
 
-
-class DesirabilityUpdater(val cityMap: CityMap): Debuggable {
+class DesirabilityUpdater(val cityMap: CityMap) : Debuggable {
     override var debug: Boolean = false
     set(value) {
         field = value
@@ -38,7 +37,6 @@ class DesirabilityUpdater(val cityMap: CityMap): Debuggable {
                     Zone.COMMERCIAL -> updateCommercial(desirabilityLayer)
                 }
             }
-
         }
     }
 
@@ -61,9 +59,7 @@ class DesirabilityUpdater(val cityMap: CityMap): Debuggable {
                 } else {
                     (availableGoodsShortDistance + availableGoodsMediumDistance + availableGoodsLongDistance + availableLabor).toDouble()
                 }
-
             }
-
         }
 
         trimDesirabilityLayer(desirabilityLayer, commercialZones)
@@ -89,9 +85,7 @@ class DesirabilityUpdater(val cityMap: CityMap): Debuggable {
                     } else {
                         (availableBuyingWholesaleGoodsShortDistance + availableBuyingWholesaleGoodsMediumDistance + availableBuyingWholesaleGoodsLongDistance + availableLabor).toDouble()
                     }
-
                 }
-
         }
 
         trimDesirabilityLayer(desirabilityLayer, industryZones)
@@ -137,12 +131,9 @@ class DesirabilityUpdater(val cityMap: CityMap): Debuggable {
                 } else {
                     desirabilityLayer[coordinate] = (availableJobsShortDistance + availableJobsMediumDistance + availableJobsLongDistance + availableGoodsShortDistance + availableGoodsMediumDistance).toDouble()
                 }
-
             }
-
         }
 
         trimDesirabilityLayer(desirabilityLayer, residentialZones)
-
     }
 }

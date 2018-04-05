@@ -61,7 +61,6 @@ class HappinessUpdater(val cityMap: CityMap) : Debuggable {
         val laborBuying = location.building.totalBeingBought(Tradeable.LABOR).toDouble()
         val laborWanted = location.building.currentQuantityWanted(Tradeable.LABOR).toDouble()
 
-
         if (laborBuying == 0.0) {
             return -3.0
         }
@@ -94,11 +93,11 @@ class HappinessUpdater(val cityMap: CityMap) : Debuggable {
         val ratio = laborForSale / laborProvided
         // debug("Building is providing $laborProvided and is selling $laborForSale. The employment ratio is: $ratio.")
         newValue += when (ratio) {
-            in 0.0 .. 0.2 -> 1.0
-            in 0.2 .. 0.4 -> 2.0
-            in 0.4 .. 0.6 -> 3.0
-            in 0.6 .. 0.8 -> 4.0
-            in 0.8 .. 10.0 -> 5.0
+            in 0.0..0.2 -> 1.0
+            in 0.2..0.4 -> 2.0
+            in 0.4..0.6 -> 3.0
+            in 0.6..0.8 -> 4.0
+            in 0.8..10.0 -> 5.0
             else -> 0.0
         }
 

@@ -45,7 +45,6 @@ data class OutsideTradeEntity(private val nationalTradeEntity: NationalTradeEnti
     override fun currentQuantityForSale(tradeable: Tradeable): Int {
         return nationalTradeEntity.currentQuantityForSale(tradeable)
     }
-
 }
 
 class TradeableCounter {
@@ -72,7 +71,7 @@ class TradeableCounter {
     }
 }
 
-data class NationalTradeEntity(val cityMap: CityMap): HasContracts, HasInventory {
+data class NationalTradeEntity(val cityMap: CityMap) : HasContracts, HasInventory {
 
     private val contracts: MutableList<Contract> = mutableListOf()
     private val wantsCounter: TradeableCounter = TradeableCounter()
@@ -87,7 +86,7 @@ data class NationalTradeEntity(val cityMap: CityMap): HasContracts, HasInventory
                 counter[tradeable] = Math.floor(population * 0.05).toInt()
                 // we do this 8 times since nation only replenishes 1x per day
                 // and manufacturing happens every 3 hours...
-                inventory.put(tradeable, Math.floor(population * 0.05).toInt()) * (24/3)
+                inventory.put(tradeable, Math.floor(population * 0.05).toInt()) * (24 / 3)
             }
         }
     }

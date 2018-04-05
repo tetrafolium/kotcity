@@ -12,10 +12,10 @@ class ResourceFinderTest {
         cityMap.buildRoad(BlockCoordinate(2, 0), BlockCoordinate(2, 23))
         cityMap.build(factory1, BlockCoordinate(0, 5))
         val resourceFinder = ResourceFinder(cityMap)
-        val result = resourceFinder.findSource(listOf(BlockCoordinate(0,0)), Tradeable.LABOR, 1)
+        val result = resourceFinder.findSource(listOf(BlockCoordinate(0, 0)), Tradeable.LABOR, 1)
         assert(result == null)
         cityMap.build(slum1, BlockCoordinate(0, 0))
-        val result2 = resourceFinder.findSource(listOf(BlockCoordinate(0,0)), Tradeable.LABOR, 1)
+        val result2 = resourceFinder.findSource(listOf(BlockCoordinate(0, 0)), Tradeable.LABOR, 1)
         assert(result2 != null)
     }
 }

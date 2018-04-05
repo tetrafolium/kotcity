@@ -42,6 +42,5 @@ object BuildingSpriteLoader {
             building.variety == "nuclear" -> "file:./assets/utility/nuclear_power_plant.png"
             else -> throw RuntimeException("Unknown power plant variety: ${building.variety}")
         }
-
     }
 }

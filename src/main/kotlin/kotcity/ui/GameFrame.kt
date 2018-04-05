@@ -30,7 +30,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.concurrent.timerTask
 
-
 object Algorithms {
     fun scale(valueIn: Double, baseMin: Double, baseMax: Double, limitMin: Double, limitMax: Double): Double {
         return (limitMax - limitMin) * (valueIn - baseMin) / (baseMax - baseMin) + limitMin
@@ -234,7 +233,6 @@ class GameFrame : View(), Debuggable {
     fun fastClicked() {
         gameSpeed = GameSpeed.FAST
     }
-
 
     fun zoomOut() {
         cityRenderer?.let {
@@ -510,7 +508,6 @@ class GameFrame : View(), Debuggable {
                     }
                 }
             }
-
         }
 
         root.requestFocus()

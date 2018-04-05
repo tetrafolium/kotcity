@@ -51,8 +51,8 @@ open class QuantizedMap<T>(val quantize: Int = 4) {
     }
 
     fun unquantized(coordinate: BlockCoordinate): List<BlockCoordinate> {
-        val xRange = (coordinate.x .. coordinate.x+quantize)
-        val yRange = (coordinate.y .. coordinate.y+quantize)
+        val xRange = (coordinate.x..coordinate.x + quantize)
+        val yRange = (coordinate.y..coordinate.y + quantize)
 
         val blocks = mutableListOf<BlockCoordinate>()
         xRange.forEach { x -> yRange.mapTo(blocks) { BlockCoordinate(x, it) } }
@@ -68,5 +68,4 @@ open class QuantizedMap<T>(val quantize: Int = 4) {
             lambda(t, u)
         }
     }
-
 }

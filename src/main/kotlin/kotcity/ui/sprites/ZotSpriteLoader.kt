@@ -26,5 +26,4 @@ object ZotSpriteLoader {
 
     private fun uncachedImageForFile(filename: String, width: Double, height: Double) =
         Image(filename, width, height, true, true)
-
 }

@@ -45,7 +45,7 @@ class AssetManager(val cityMap: CityMap) {
                 val buildingType = buildingJson["type"].nullString
 
                 val lb = if (buildingType != null) {
-                    val lb = when(buildingType) {
+                    val lb = when (buildingType) {
                         "commercial" -> Commercial(cityMap)
                         "residential" -> Residential(cityMap)
                         "industrial" -> Industrial(cityMap)
@@ -63,7 +63,6 @@ class AssetManager(val cityMap: CityMap) {
                 }
                 lb
             }
-
         }.flatten()
     }
 
@@ -74,7 +73,7 @@ class AssetManager(val cityMap: CityMap) {
 
         val buildingJson = gson.fromJson<JsonObject>(FileReader(assetFile))
 
-        val lb : LoadableBuilding = when (klass) {
+        val lb: LoadableBuilding = when (klass) {
             Residential::class -> Residential(cityMap)
             Commercial::class -> Commercial(cityMap)
             Industrial::class -> Industrial(cityMap)
@@ -135,7 +134,6 @@ class AssetManager(val cityMap: CityMap) {
                 }
             }
 
-
             if (production.has("produces")) {
                 production["produces"].asJsonObject?.let { produces ->
                     val names = produces.keys()
@@ -144,7 +142,6 @@ class AssetManager(val cityMap: CityMap) {
                     }
                 }
             }
-
         }
     }
 }

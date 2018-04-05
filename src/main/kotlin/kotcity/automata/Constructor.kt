@@ -8,7 +8,7 @@ import kotcity.util.randomElement
 import java.util.*
 import kotlin.reflect.KClass
 
-fun<T: Any> T.getClass(): KClass<T> {
+fun <T : Any> T.getClass(): KClass<T> {
     return javaClass.kotlin
 }
 
@@ -34,7 +34,7 @@ class Constructor(val cityMap: CityMap) : Debuggable {
                     val layer = cityMap.desirabilityLayer(zoneType, 1) ?: return
 
                     // get the 10 best places... pick one randomly ....
-                    val blockAndScore = layer.entries().filter { isEmpty(it) }.filter { it.value > 0}.sortedByDescending { it.value }.take(10).randomElement()
+                    val blockAndScore = layer.entries().filter { isEmpty(it) }.filter { it.value > 0 }.sortedByDescending { it.value }.take(10).randomElement()
                     if (blockAndScore == null) {
                         if (debug) {
                             debug("Could not find most desirable $zoneType zone!")
@@ -51,14 +51,10 @@ class Constructor(val cityMap: CityMap) : Debuggable {
                         } else {
                             debug("Sorry, no building could be found for $zoneType and $desirability")
                         }
-
                     }
                 } else {
                     debug("Some $zoneType were bulldozed, so we don't want to build any...")
                 }
-
-
-
             })
         }
     }
@@ -92,7 +88,6 @@ class Constructor(val cityMap: CityMap) : Debuggable {
                 debug("$fuzzedCoordinate didn't have any desirable blocks...")
             }
             tries++
-
         }
     }
 
@@ -102,11 +97,9 @@ class Constructor(val cityMap: CityMap) : Debuggable {
         return BlockCoordinate(coordinate.x + randX, coordinate.y + randY)
     }
 
-    private fun rand(from: Int, to: Int) : Int {
+    private fun rand(from: Int, to: Int): Int {
         return random.nextInt(to - from) + from
     }
-
-
 
     // TODO: use desirability later...
     private fun findBuilding(zoneType: Zone): Building? {

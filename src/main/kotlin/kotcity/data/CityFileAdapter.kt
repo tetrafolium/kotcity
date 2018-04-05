@@ -15,7 +15,6 @@ import java.util.*
 
 val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 
-
 fun parseDate(str: String): Date {
     simpleDateFormat.timeZone = TimeZone.getDefault()
     return simpleDateFormat.parse(str)
@@ -83,7 +82,6 @@ val gson: Gson = GsonBuilder()
             createInstances {
                 CityMap(512, 512)
             }
-
         }
         .setPrettyPrinting()
         .create()
@@ -97,7 +95,6 @@ private fun readResourceLayers(data: JsonObject, cityMap: CityMap) {
             val value = it["value"].asDouble
             cityMap.setResourceValue(layerName, BlockCoordinate(x, y), value)
         }
-
     }
 }
 
@@ -226,16 +223,13 @@ fun readContracts(data: JsonObject, cityMap: CityMap) {
                     println("Error during contract loading! Can't find path!")
                 }
             }
-
-
-
         }
     }
 }
 
 fun writeContracts(data: JsonObject, it: SerializerArg<CityMap>) {
     if (it.src.locations().count() > 0) {
-        data["contracts"] = it.src.locations().mapNotNull { location->
+        data["contracts"] = it.src.locations().mapNotNull { location ->
             val building = location.building
             if (building.contracts.count() == 0) {
                 null
@@ -254,7 +248,6 @@ fun writeContracts(data: JsonObject, it: SerializerArg<CityMap>) {
                         println("We are trading with outside... not writing!")
                         null
                     }
-
                 }.toJsonArray()
             }
         }.flatten().toJsonArray()
@@ -367,5 +360,4 @@ object CityFileAdapter {
         city.fileName = file.absoluteFile.toString()
         return city
     }
-
 }

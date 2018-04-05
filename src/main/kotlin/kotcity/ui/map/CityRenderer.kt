@@ -143,7 +143,6 @@ class CityRenderer(
                 gameFrame.currentStage?.scene?.root?.cursor = Cursor.DEFAULT
             }
         }
-
     }
 
     fun onMouseReleased(event: MouseEvent) {
@@ -151,7 +150,6 @@ class CityRenderer(
         runLater {
             gameFrame.currentStage?.scene?.root?.cursor = Cursor.DEFAULT
         }
-
     }
 
     fun onMouseDragged(event: MouseEvent) {
@@ -282,7 +280,6 @@ class CityRenderer(
                 highlightBlock(blockCoordinate.x, blockCoordinate.y)
             }
         }
-
     }
 
     // TODO: this is probably brutally slow...
@@ -382,7 +379,6 @@ class CityRenderer(
                     canvas.graphicsContext2D.fill = Color.LIGHTGOLDENRODYELLOW
                     canvas.graphicsContext2D.fillRect(tx * blockSize, ty * blockSize, blockSize, blockSize)
                 }
-
             }
         }
     }
@@ -452,7 +448,6 @@ class CityRenderer(
             val newBlock = BlockCoordinate(start.x - offsetX, start.y - offsetY)
             highlightBlocks(newBlock, width, height)
         }
-
     }
 
     private fun highlightBlocks(start: BlockCoordinate, width: Int, height: Int) {

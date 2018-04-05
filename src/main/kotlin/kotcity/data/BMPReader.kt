@@ -7,13 +7,12 @@ import java.io.IOException
 import java.io.InputStream
 import kotlin.experimental.and
 
-
 /** A decoder for Windows bitmap (.BMP) files.  */
 class BMPDecoder {
     lateinit var `is`: InputStream
     var curPos = 0
 
-    var bitmapOffset: Int = 0               // starting position of image data
+    var bitmapOffset: Int = 0 // starting position of image data
 
     var width: Int = 0                              // image width in pixels
     var height: Int = 0                             // image height in pixels
@@ -25,13 +24,12 @@ class BMPDecoder {
 
     lateinit var r: ByteArray
     lateinit var g: ByteArray
-    lateinit var b: ByteArray             // color palette
+    lateinit var b: ByteArray // color palette
     var noOfEntries: Int = 0
 
-    lateinit var byteData: ByteArray                // Unpacked data
-    var intData: IntArray = IntArray(0)                     // Unpacked data
+    lateinit var byteData: ByteArray // Unpacked data
+    var intData: IntArray = IntArray(0) // Unpacked data
     var topDown: Boolean = false
-
 
     @Throws(IOException::class)
     private fun readInt(): Int {
@@ -43,7 +41,6 @@ class BMPDecoder {
         return (b4 shl 24) + (b3 shl 16) + (b2 shl 8) + (b1 shl 0)
     }
 
-
     @Throws(IOException::class)
     private fun readShort(): Short {
         val b1 = `is`.read()
@@ -52,18 +49,17 @@ class BMPDecoder {
         return ((b2 shl 8) + b1).toShort()
     }
 
-
     @Throws(IOException::class, Exception::class)
     fun getFileHeader() {
         // Actual contents (14 bytes):
         var fileType: Short = 0x4d42// always "BM"
-        val fileSize: Int                   // size of file in bytes
-        var reserved1: Short = 0    // always 0
-        var reserved2: Short = 0    // always 0
+        val fileSize: Int // size of file in bytes
+        var reserved1: Short = 0 // always 0
+        var reserved2: Short = 0 // always 0
 
         fileType = readShort()
         if (fileType.toInt() != 0x4d42)
-            throw Exception("Not a BMP file")  // wrong file type
+            throw Exception("Not a BMP file") // wrong file type
         fileSize = readInt()
         reserved1 = readShort()
         reserved2 = readShort()
@@ -74,13 +70,13 @@ class BMPDecoder {
     fun getBitmapHeader() {
 
         // Actual contents (40 bytes):
-        val size: Int                               // size of this header in bytes
-        val planes: Short                   // no. of color planes: always 1
-        val sizeOfBitmap: Int               // size of bitmap in bytes (may be 0: if so, calculate)
-        val horzResolution: Int             // horizontal resolution, pixels/meter (may be 0)
-        val vertResolution: Int             // vertical resolution, pixels/meter (may be 0)
-        var colorsUsed: Int                 // no. of colors in palette (if 0, calculate)
-        var colorsImportant: Int    // no. of important colors (appear first in palette) (0 means all are important)
+        val size: Int // size of this header in bytes
+        val planes: Short // no. of color planes: always 1
+        val sizeOfBitmap: Int // size of bitmap in bytes (may be 0: if so, calculate)
+        val horzResolution: Int // horizontal resolution, pixels/meter (may be 0)
+        val vertResolution: Int // vertical resolution, pixels/meter (may be 0)
+        var colorsUsed: Int // no. of colors in palette (if 0, calculate)
+        var colorsImportant: Int // no. of important colors (appear first in palette) (0 means all are important)
         val noOfPixels: Int
 
         size = readInt()
@@ -115,7 +111,7 @@ class BMPDecoder {
             if (bitsPerPixel < 16)
                 actualColorsUsed = 1 shl bitsPerPixel.toInt()
             else
-                actualColorsUsed = 0   // no palette
+                actualColorsUsed = 0 // no palette
         /*
                 if (IJ.debugMode) {
                     IJ.log("BMP_Reader");
@@ -223,7 +219,7 @@ class BMPDecoder {
 
     @Throws(IOException::class, Exception::class)
     fun getPixelData() {
-        val rawData: ByteArray                 // the raw unpacked data
+        val rawData: ByteArray // the raw unpacked data
 
         // Skip to the start of the bitmap data (if we are not already there)
         val skip = (bitmapOffset - curPos).toLong()
@@ -255,7 +251,6 @@ class BMPDecoder {
         }
     }
 
-
     @Throws(IOException::class, Exception::class)
     fun read(`is`: InputStream) {
         this.`is` = `is`
@@ -266,7 +261,6 @@ class BMPDecoder {
         getPalette()
         getPixelData()
     }
-
 
     fun makeImageSource(): MemoryImageSource {
         val cm: ColorModel
@@ -292,6 +286,6 @@ class BMPDecoder {
                     height, cm, byteData, 0, width)
         }
 
-        return mis      // this can be used by Component.createImage()
+        return mis // this can be used by Component.createImage()
     }
 }

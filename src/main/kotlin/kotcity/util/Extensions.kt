@@ -17,4 +17,3 @@ fun <E> List<E>.randomElements(numberOfElements: Int) =
     if (numberOfElements < size) shuffled().take(numberOfElements) else this
 
 fun IntRange.reorder() = if (first < last) this else last..first
-

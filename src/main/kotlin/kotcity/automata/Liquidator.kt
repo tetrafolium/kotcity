@@ -17,7 +17,7 @@ class Liquidator(val cityMap: CityMap) : Debuggable {
         val bankruptLocations = bankruptLocations()
 
         if (bankruptLocations.isNotEmpty()) {
-            val howManyNeedDestruction : Int = Math.floor(bankruptLocations.count() * 0.10).toInt().coerceIn(1 .. 15)
+            val howManyNeedDestruction: Int = Math.floor(bankruptLocations.count() * 0.10).toInt().coerceIn(1..15)
             debug("Blowing up $howManyNeedDestruction buildings...")
 
             val start = System.currentTimeMillis()

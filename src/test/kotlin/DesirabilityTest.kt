@@ -96,6 +96,5 @@ class DesirabilityTest {
         val shipper = Shipper(map)
         shipper.debug = true
         shipper.tick()
-
     }
 }

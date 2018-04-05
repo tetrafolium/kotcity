@@ -1,27 +1,26 @@
 package kotcity.automata
 
 import kotcity.data.*
-import kotcity.pathfinding.MAX_DISTANCE
 import kotcity.pathfinding.Path
 import kotcity.pathfinding.Pathfinder
 import kotcity.util.Debuggable
 
 const val MAX_RESOURCE_DISTANCE = 500
 
-class ResourceFinder(val cityMap: CityMap): Debuggable {
+class ResourceFinder(val cityMap: CityMap) : Debuggable {
     override var debug = false
 
     private val pathfinder = Pathfinder(cityMap)
 
     fun quantityForSaleNearby(tradeable: Tradeable, sourceBlock: BlockCoordinate, maxDistance: Int = MAX_RESOURCE_DISTANCE): Int {
         val locations = cityMap.nearestBuildings(sourceBlock, maxDistance)
-        val quantityNearby = locations.sumBy {  location -> location.building.currentQuantityForSale(tradeable) }
+        val quantityNearby = locations.sumBy { location -> location.building.currentQuantityForSale(tradeable) }
         return quantityNearby
     }
 
     fun quantityWantedNearby(tradeable: Tradeable, sourceBlock: BlockCoordinate, maxDistance: Int = MAX_RESOURCE_DISTANCE): Int {
         val locations = cityMap.nearestBuildings(sourceBlock, maxDistance)
-        val quantityNearby = locations.sumBy {  location -> location.building.currentQuantityWanted(tradeable) }
+        val quantityNearby = locations.sumBy { location -> location.building.currentQuantityWanted(tradeable) }
         return quantityNearby
     }
 
@@ -40,7 +39,7 @@ class ResourceFinder(val cityMap: CityMap): Debuggable {
             var preferredTradeEntity: TradeEntity? = null
             var preferredPath: Path? = null
 
-            val destinationBlocks = buildingsWithResource.flatMap { cityMap.buildingBlocks(it.coordinate, it.building)}.distinct()
+            val destinationBlocks = buildingsWithResource.flatMap { cityMap.buildingBlocks(it.coordinate, it.building) }.distinct()
             shortestPath = pathfinder.tripTo(sourceBlocks, destinationBlocks)
 
             // OK! now if we got a path we want to find the building in the last block...
@@ -62,7 +61,7 @@ class ResourceFinder(val cityMap: CityMap): Debuggable {
                 }
             }
 
-            preferredPath?.let {path ->
+            preferredPath?.let { path ->
                 preferredTradeEntity?.let { entity ->
                     return Pair(entity, path)
                 }
@@ -70,12 +69,9 @@ class ResourceFinder(val cityMap: CityMap): Debuggable {
 
             return null
         }
-
-
     }
 
     private var lastOutsidePathFailAt: Long = System.currentTimeMillis()
-
 
     private fun possiblePathToOutside(tradeable: Tradeable, quantity: Int, sourceBlocks: List<BlockCoordinate>): Pair<TradeEntity, Path>? {
         // OK what we want to do here is don't try and get a trip to the outside all the time...
@@ -111,11 +107,11 @@ class ResourceFinder(val cityMap: CityMap): Debuggable {
         synchronized(buildingsWantingResource) {
             var shortestPath: Path? = null
 
-            val destinationBlocks = buildingsWantingResource.flatMap { cityMap.buildingBlocks(it.coordinate, it.building)}.distinct()
+            val destinationBlocks = buildingsWantingResource.flatMap { cityMap.buildingBlocks(it.coordinate, it.building) }.distinct()
             shortestPath = pathfinder.tripTo(sourceBlocks, destinationBlocks)
 
             // OK! now if we got a path we want to find the building in the last block...
-            shortestPath?.let {shortestPath ->
+            shortestPath?.let { shortestPath ->
                 shortestPath.blocks()?.last()?.let {
                     val location = cityMap.locationsAt(it).firstOrNull()
                     if (location != null) {
@@ -137,8 +133,5 @@ class ResourceFinder(val cityMap: CityMap): Debuggable {
 
             return null
         }
-
     }
-
-
 }

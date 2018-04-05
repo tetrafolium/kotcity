@@ -18,10 +18,10 @@ import java.io.Serializable
  * @property fourth Fourth value.
  */
 data class Quadruple<out A, out B, out C, out D>(
-        val first: A,
-        val second: B,
-        val third: C,
-        val fourth: D
+    val first: A,
+    val second: B,
+    val third: C,
+    val fourth: D
 ) : Serializable {
 
     /**
@@ -48,11 +48,11 @@ data class Quadruple<out A, out B, out C, out D>(
  * @property fifth Fifth value.
  */
 public data class Quintuple<out A, out B, out C, out D, out E>(
-        public val first: A,
-        public val second: B,
-        public val third: C,
-        public val fourth: D,
-        public val fifth: E
+    public val first: A,
+    public val second: B,
+    public val third: C,
+    public val fourth: D,
+    public val fifth: E
 ) : Serializable {
 
     /**

@@ -1,6 +1,5 @@
 package kotcity.ui
 
-
 import javafx.collections.FXCollections
 import javafx.collections.ListChangeListener
 import javafx.collections.ObservableList
@@ -111,7 +110,6 @@ class WorkIndicatorDialog<in P>
             override fun call(): Double {
                 return ProgressBar.INDETERMINATE_PROGRESS
             }
-
         }
 
         animationWorker?.let {
@@ -123,8 +121,6 @@ class WorkIndicatorDialog<in P>
 
             Thread(animationWorker).start()
         }
-
-
     }
 
     /**
@@ -149,7 +145,6 @@ class WorkIndicatorDialog<in P>
             } catch (e: Exception) {
                 throw RuntimeException(e)
             }
-
         }
 
         taskWorker!!.setOnSucceeded { e -> eh(e) }
@@ -157,5 +152,4 @@ class WorkIndicatorDialog<in P>
 
         Thread(taskWorker).start()
     }
-
 }

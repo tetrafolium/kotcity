@@ -6,7 +6,6 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 import java.util.*
 
-
 class MapGenerator {
 
     private val rng = Random()
@@ -68,7 +67,7 @@ class MapGenerator {
         val baseLine = 0.0
 
         listOf("oil", "coal", "gold", "soil").forEachIndexed { n, resourceName ->
-            val noiseGen = OpenSimplexNoise(1+seed+n)
+            val noiseGen = OpenSimplexNoise(1 + seed + n)
             repeat(map.width) { x ->
                 repeat(map.height) { y ->
 
@@ -100,7 +99,5 @@ class MapGenerator {
                 }
             }
         }
-
     }
-
 }

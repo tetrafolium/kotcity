@@ -3,7 +3,7 @@ package kotcity.automata
 import kotcity.data.*
 import kotcity.util.Debuggable
 
-class ZotPopulator(val cityMap: CityMap): Debuggable {
+class ZotPopulator(val cityMap: CityMap) : Debuggable {
     override var debug: Boolean = false
 
     fun tick() {
@@ -11,7 +11,7 @@ class ZotPopulator(val cityMap: CityMap): Debuggable {
 
             // we gotta SKIP roads...
             if (location.building !is Road) {
-                val newZots = when(location.building::class) {
+                val newZots = when (location.building::class) {
                     Residential::class -> updateResidential(location)
                     Commercial::class -> updateCommercial(location)
                     Industrial::class -> updateIndustrial(location)
@@ -23,7 +23,6 @@ class ZotPopulator(val cityMap: CityMap): Debuggable {
                 debug("Final zots for ${location.building} are $finalZots")
                 location.building.zots = finalZots
             }
-
         }
     }
 
@@ -83,7 +82,7 @@ class ZotPopulator(val cityMap: CityMap): Debuggable {
         val nearbyRoads = neighboringBlocks.flatMap { cityMap.cachedLocationsIn(it) }
                                                        .filter { it.building is Road }
 
-        val trafficCount = nearbyRoads.sumBy { cityMap.trafficLayer[it.coordinate]?.toInt() ?: 0}
+        val trafficCount = nearbyRoads.sumBy { cityMap.trafficLayer[it.coordinate]?.toInt() ?: 0 }
         return trafficCount > quantity
     }
 }

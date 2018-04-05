@@ -12,10 +12,10 @@ enum class CountType {
 }
 
 data class EconomyReport(
-        val tradeable: Tradeable,
-        val supply: Int,
-        val demand: Int,
-        val balance: Int
+    val tradeable: Tradeable,
+    val supply: Int,
+    val demand: Int,
+    val balance: Int
 )
 
 class ResourceCounts {
@@ -37,10 +37,9 @@ class ResourceCounts {
             EconomyReport(tradeable, supply, demand, balance)
         }
     }
-
 }
 
-class CensusTaker(val cityMap: CityMap): Debuggable {
+class CensusTaker(val cityMap: CityMap) : Debuggable {
     override var debug: Boolean = false
     var population = 0
     var resourceCounts: ResourceCounts = ResourceCounts()
@@ -66,8 +65,6 @@ class CensusTaker(val cityMap: CityMap): Debuggable {
                 listeners.forEach { it() }
             }
         }
-
-
     }
 
     private fun supplyAndDemand() {

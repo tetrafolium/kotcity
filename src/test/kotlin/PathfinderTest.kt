@@ -25,16 +25,16 @@ class PathfinderTest {
         val flatMap = CityMap.flatMap(100, 100)
         val assetManager = AssetManager(flatMap)
         // ok.. we need stripes of road
-        for (i in 0 .. 10 step 2) {
+        for (i in 0..10 step 2) {
             flatMap.buildRoad(BlockCoordinate(0, i), BlockCoordinate(90, i))
-            for (j in 0 .. 40 step 2) {
+            for (j in 0..40 step 2) {
                 val slum1 = assetManager.buildingFor(Residential::class, "slum1")
-                flatMap.build(slum1, BlockCoordinate(j, i+1))
+                flatMap.build(slum1, BlockCoordinate(j, i + 1))
             }
 
-            for (j in 60 .. 90 step 2) {
+            for (j in 60..90 step 2) {
                 val factory = assetManager.buildingFor(Industrial::class, "small_factory")
-                flatMap.build(factory, BlockCoordinate(j, i+1))
+                flatMap.build(factory, BlockCoordinate(j, i + 1))
             }
         }
 

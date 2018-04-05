@@ -6,7 +6,7 @@ import kotcity.util.Debuggable
 import kotcity.util.randomElements
 import kotlinx.coroutines.experimental.*
 
-fun <A>Collection<A>.forEachParallel(f: suspend (A) -> Unit): Unit = runBlocking {
+fun <A> Collection<A>.forEachParallel(f: suspend (A) -> Unit): Unit = runBlocking {
     map { async(CommonPool) { f(it) } }.forEach { it.await() }
 }
 
@@ -66,11 +66,10 @@ class ContactFulfiller(val cityMap: CityMap) : Debuggable {
                         newSize = contractCollection.size
                     }
                 }
-            } catch(ex: CancellationException) {
+            } catch (ex: CancellationException) {
                 debug("Reached timeout of $maxMillis milliseconds! Cancelling all outstanding jobs!")
                 contractJobs.cancelAndJoin()
             }
-
         }
 
         debug("$howManyNeedContracts buildings needed contracts and we attempted to create $howManyProcessed")
@@ -155,19 +154,14 @@ class ContactFulfiller(val cityMap: CityMap) : Debuggable {
                                 debug("${building.name} now has ${building.currentQuantityForSale(tradeable)} $tradeable left to provide.")
                                 // debug("${otherEntity.description()} still wants to buy ${otherEntity.currentQuantityWanted(tradeable)} $tradeable")
                             }
-
-
                         }
                     } else {
                         debug("Cannot find any place to sell $tradeable nearby. Won't bother with pathfinding...")
                         done = true
                     }
-
                 }
             }
         }
-
-
     }
 
     // TODO: this is most likely bugged...
@@ -197,8 +191,7 @@ class ContactFulfiller(val cityMap: CityMap) : Debuggable {
             return
         }
 
-        if (entitiesWithContracts().size > 100)
-        {
+        if (entitiesWithContracts().size > 100) {
             val howMany = 5
             cityMap.locations().randomElements(howMany)?.forEach { location ->
                 val buildings = cityMap.cachedLocationsIn(location.coordinate)
@@ -209,6 +202,5 @@ class ContactFulfiller(val cityMap: CityMap) : Debuggable {
                 }
             }
         }
-
     }
 }

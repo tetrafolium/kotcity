@@ -1,6 +1,5 @@
 package kotcity.data
 
-import com.github.debop.kodatimes.dateTimeFromJson
 import kotcity.pathfinding.Path
 import kotcity.util.Debuggable
 
@@ -89,13 +88,13 @@ data class CityTradeEntity(override val coordinate: BlockCoordinate, val buildin
 }
 
 data class Contract(
-        val from: TradeEntity,
-        val to: TradeEntity,
-        val tradeable: Tradeable,
-        val quantity: Int,
-        val path: kotcity.pathfinding.Path?
+    val from: TradeEntity,
+    val to: TradeEntity,
+    val tradeable: Tradeable,
+    val quantity: Int,
+    val path: kotcity.pathfinding.Path?
 
-): Debuggable {
+) : Debuggable {
     override var debug: Boolean = false
 
     override fun toString(): String {
@@ -144,7 +143,6 @@ data class Contract(
         }
 
         return true
-
     }
 
     fun void() {
@@ -158,13 +156,11 @@ data class Contract(
                 second.voidContractsWith(first)
             }
         }
-
-
     }
 }
 
 class Inventory {
-    private val inventory : MutableMap<Tradeable, Int> = mutableMapOf()
+    private val inventory: MutableMap<Tradeable, Int> = mutableMapOf()
 
     fun add(tradeable: Tradeable, quantity: Int): Int {
         val onHand = inventory.getOrDefault(tradeable, 0)

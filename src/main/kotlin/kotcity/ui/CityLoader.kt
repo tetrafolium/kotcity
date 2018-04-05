@@ -11,7 +11,6 @@ import tornadofx.runLater
 import java.io.File
 import java.util.function.ToIntFunction
 
-
 object CityLoader {
     fun loadCity(view: View) {
         val fileChooser = FileChooser()
@@ -48,10 +47,7 @@ object CityLoader {
                         }
                         1
                     })
-
                 }
-
-
             } else {
                 val alert = Alert(AlertType.ERROR)
                 alert.title = "Error during load"

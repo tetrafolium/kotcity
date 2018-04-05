@@ -3,7 +3,7 @@ package kotcity.automata
 import kotcity.data.*
 import kotcity.util.Debuggable
 
-class Manufacturer(val cityMap: CityMap): Debuggable {
+class Manufacturer(val cityMap: CityMap) : Debuggable {
 
     override var debug = false
 

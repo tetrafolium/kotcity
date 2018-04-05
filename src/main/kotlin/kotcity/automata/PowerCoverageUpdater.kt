@@ -31,6 +31,5 @@ object PowerCoverageUpdater {
         map.locations().forEach { location ->
             location.building.powered = gridmap.containsKey(location.coordinate)
         }
-
     }
 }
