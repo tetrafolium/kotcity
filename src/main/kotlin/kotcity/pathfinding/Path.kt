@@ -3,7 +3,7 @@ package kotcity.pathfinding
 import kotcity.data.BlockCoordinate
 
 /**
- * Path of nodes, with conveniece methods.
+ * Path of nodes, with convenience methods.
  *
  * @nodes list of nodes along a path
  */
