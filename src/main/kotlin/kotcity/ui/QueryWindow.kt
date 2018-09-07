@@ -5,10 +5,8 @@ import javafx.scene.control.TextArea
 import javafx.scene.image.Image
 import javafx.scene.image.ImageView
 import javafx.scene.layout.BorderPane
-import kotcity.data.BlockCoordinate
-import kotcity.data.CityMap
-import kotcity.data.Location
-import kotcity.data.Road
+import kotcity.data.*
+import kotcity.data.buildings.Road
 import kotcity.ui.sprites.BuildingSpriteLoader
 import tornadofx.View
 import kotlin.math.roundToInt
@@ -39,11 +37,29 @@ class QueryWindow : View() {
                     buffer.append("Zone: $it\n")
                 }
 
+                buffer.append("District: ${city.districtAt(coordinate).name}\n")
+
                 // let's get that desirability...
-                val desirability = city.desirabilityLayers.maxBy { it[coordinate] ?: 0.0 }?.get(coordinate) ?: 0.0
-                buffer.append("Desirability: $desirability\n")
+                val residentialDesirability =
+                    city.desirabilityLayers.find { it.zoneType == Zone.RESIDENTIAL }?.get(coordinate)
+                if (residentialDesirability != null) {
+                    buffer.append("Residential Desirability: ${residentialDesirability.toInt()}\n")
+                }
+
+                val commercialDesirability =
+                    city.desirabilityLayers.find { it.zoneType == Zone.COMMERCIAL }?.get(coordinate)
+                if (commercialDesirability != null) {
+                    buffer.append("Commercial Desirability: ${commercialDesirability.toInt()}\n")
+                }
+
+                val industrialDesirability =
+                    city.desirabilityLayers.find { it.zoneType == Zone.INDUSTRIAL }?.get(coordinate)
+                if (industrialDesirability != null) {
+                    buffer.append("Industrial Desirability: ${industrialDesirability.toInt()}\n")
+                }
+
                 buffer.append("Elevation: ${city.groundLayer[coordinate]?.elevation}\n")
-                buffer.append("Land Value: ???\n")
+                buffer.append("Land Value: $${(city.landValueLayer[coordinate] ?: 0.0).roundToInt()}\n")
 
                 val coverage = ((city.fireCoverageLayer[coordinate] ?: 0.0) * 100).roundToInt()
                 buffer.append("Fire Coverage: $coverage %\n")
@@ -51,6 +67,8 @@ class QueryWindow : View() {
                 buffer.append("Crime: $crime %\n")
                 val policePresence = ((city.policePresenceLayer[coordinate] ?: 0.0) * 100).roundToInt()
                 buffer.append("Police Presence: $policePresence %\n")
+                val pollution = city.pollutionLayer[coordinate] ?: 0.0
+                buffer.append("Pollution: ${pollution.toInt()}\n")
 
                 buildingDescriptionArea.text = buffer.toString()
             }
@@ -69,14 +87,18 @@ class QueryWindow : View() {
         this.title = "Inspecting ${building.description}"
 
         buffer.append(building.description + "\n")
+        buffer.append("Level: ${building.level}\n")
         buffer.append("Powered: ${building.powered}\n")
         buffer.append("Money: $${building.balance()}\n")
         buffer.append("Happiness: ${building.happiness}\n")
+        buffer.append("Goodwill: ${building.goodwill}\n")
 
         if (building.zots.isNotEmpty()) {
             buffer.append("\nComplaints:\n")
             building.zots.forEach {
-                buffer.append(it.toString() + "\n")
+                if (it.age > Tunable.MIN_ZOT_AGE) {
+                    buffer.append(it.type.toString() + "\n")
+                }
             }
             buffer.append("\n")
         }
@@ -85,7 +107,7 @@ class QueryWindow : View() {
             val filename = "file:./assets/misc/unknown.png"
             buildingImageView.image = Image(filename, 64.0, 64.0, true, false)
         } else {
-            buildingImageView.image = BuildingSpriteLoader.spriteForBuildingType(building, 64.0, 64.0)
+            buildingImageView.image = BuildingSpriteLoader.spriteForBuildingType(building, 64, 64)
         }
 
         building.summarizeContracts().apply {
@@ -101,7 +123,7 @@ class QueryWindow : View() {
         }
 
         if (buildings.any { it.building is Road }) {
-            buffer.append("Traffic: ${city.trafficLayer[coordinate]}\n")
+            buffer.append("Traffic: ${city.trafficLayer[coordinate] ?: 0.0}\n")
         }
     }
 
@@ -117,8 +139,5 @@ class QueryWindow : View() {
         buffer.append("Type: ${city.groundLayer[coordinate]?.type}\n")
     }
 
-    fun dismissClicked() {
-        println("We want to close...")
-        this.currentStage?.close()
-    }
+    fun dismissClicked() = this.currentStage?.close()
 }

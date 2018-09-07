@@ -2,8 +2,8 @@ import javafx.application.Application
 import javafx.stage.Stage
 import kotcity.data.BlockCoordinate
 import kotcity.data.CityMap
-import kotcity.data.Residential
-import kotcity.data.assets.AssetManager
+import kotcity.data.buildings.Residential
+import kotcity.data.AssetManager
 import kotcity.ui.KotcityStyles
 import kotcity.ui.QueryWindow
 import tornadofx.App

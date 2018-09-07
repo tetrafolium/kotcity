@@ -1,7 +1,10 @@
 package kotcity.ui
 
 import javafx.animation.AnimationTimer
-import javafx.scene.control.*
+import javafx.scene.control.Alert
+import javafx.scene.control.ComboBox
+import javafx.scene.control.Slider
+import javafx.scene.control.TextField
 import javafx.scene.layout.BorderPane
 import javafx.stage.FileChooser
 import kotcity.data.BMPImporter
@@ -27,6 +30,7 @@ class MapGeneratorScreen : View() {
     private val f3Field: TextField by fxid()
     private val expField: TextField by fxid()
     private val sizeField: TextField by fxid()
+    private val nameField: TextField by fxid()
     private val seaLevelSlider: Slider by fxid()
 
     private var timer: AnimationTimer? = null
@@ -63,6 +67,12 @@ class MapGeneratorScreen : View() {
         }
 
         timer?.start()
+    }
+
+    override fun onDock() {
+        super.onDock()
+        currentWindow?.sizeToScene()
+        currentWindow?.centerOnScreen()
     }
 
     private fun generate(width: Int, height: Int): CityMap {
@@ -149,27 +159,9 @@ class MapGeneratorScreen : View() {
     }
 
     fun acceptPressed() {
-        TextInputDialog("My City").apply {
-            title = "Name your city"
-            headerText = "Choose a name for your city"
-            contentText = "Please enter your city's name:"
-
-            val result = showAndWait()
-            if (result.isPresent) {
-                newMap.cityName = result.get()
-            }
-
-            runLater {
-                val oldStage = currentStage
-                oldStage?.close()
-            }
-
-            timer?.stop()
-            tornadofx.find(GameFrame::class).apply {
-                setMap(newMap)
-                openWindow(escapeClosesWindow = false)
-                currentStage?.isMaximized = true
-            }
-        }
+        newMap.cityName = nameField.text
+        timer?.stop()
+        replaceWith<GameFrame>()
+        tornadofx.find(GameFrame::class).setMap(newMap)
     }
 }

@@ -3,8 +3,8 @@
   "width": 1,
   "height": 1,
   "name": "slum2",
-  "sprite": "slum2.png",
-  "description": "Slummy Apartment",
+  "sprite": "slum2.svg",
+  "description": "4307 Augusta Park",
   "level": 1,
   "power_required": 1,
   "production": {

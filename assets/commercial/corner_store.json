@@ -3,17 +3,18 @@
   "width": 1,
   "height": 1,
   "name": "corner_store",
-  "sprite": "corner_store.png",
+  "sprite": "corner_store.svg",
   "description": "Corner Store",
   "level": 1,
   "power_required": 1,
+  "pollution": 1,
   "production": {
     "consumes": {
-      "labor": 2,
+      "labor": 1,
       "wholesale_goods": 5
     },
     "produces": {
-      "goods": 15
+      "goods": 8
     }
   }
 }

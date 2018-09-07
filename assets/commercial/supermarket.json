@@ -3,17 +3,18 @@
   "width": 2,
   "height": 2,
   "name": "supermarket",
-  "sprite": "supermarket.png",
+  "sprite": "supermarket.svg",
   "description": "Supermarket",
   "level": 1,
   "power_required": 3,
+  "pollution": 1,
   "production": {
     "consumes": {
-      "labor": 5,
+      "labor": 4,
       "wholesale_goods": 10
     },
     "produces": {
-      "goods": 30
+      "goods": 25
     }
   }
 }

@@ -1,25 +1,29 @@
 package kotcity.memoization
 
-import aballano.kotlinmemoization.tuples.Quadruple
-import aballano.kotlinmemoization.tuples.Quintuple
+import kotcity.util.Quadruple
+import kotcity.util.Quintuple
 import com.github.benmanes.caffeine.cache.Cache
 import com.github.benmanes.caffeine.cache.Caffeine
 import com.github.benmanes.caffeine.cache.LoadingCache
-import java.time.Duration
 import java.util.concurrent.TimeUnit
 
 data class CacheOptions(
-        val weakKeys: Boolean = true,
-        val weakValues: Boolean = true,
+        val weakKeys: Boolean = false,
+        val weakValues: Boolean = false,
         val maximumSize: Long = 100_000,
+        val limitSize: Boolean = false,
         val durationValue: Long = 3,
         val durationUnit: TimeUnit = TimeUnit.MINUTES
 )
 
 private fun caffeinate(cacheOptions: CacheOptions): Caffeine<Any?, Any?> {
     var cache = Caffeine.newBuilder()
-            .maximumSize(cacheOptions.maximumSize)
             .expireAfterWrite(cacheOptions.durationValue, cacheOptions.durationUnit)
+
+            if (cacheOptions.limitSize) {
+                cache = cache.maximumSize(cacheOptions.maximumSize)
+            }
+
             if (cacheOptions.weakKeys) {
                 cache = cache.weakKeys()
             }

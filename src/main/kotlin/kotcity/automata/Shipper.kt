@@ -1,9 +1,10 @@
 package kotcity.automata
 
 import kotcity.data.*
+import kotcity.data.buildings.Building
 import kotcity.util.Debuggable
 
-class Shipper(val cityMap: CityMap): Debuggable {
+class Shipper(val cityMap: CityMap) : Debuggable {
 
     override var debug = false
 
@@ -17,11 +18,6 @@ class Shipper(val cityMap: CityMap): Debuggable {
             building.contracts.forEach { contract ->
                 // we only want to deal with "to" and not to ourself...
                 // we also don't SEND labor
-
-                // THIS TOP CASE is building SENDING something to another building
-                // if (contract.to.building() != building && contract.tradeable != Tradeable.LABOR) {
-                //    sendToOtherBuilding(contract, building)
-                // }
 
                 // let's try to "pull" what we need...
                 if (contract.to.building() == building && contract.tradeable != Tradeable.LABOR) {
@@ -48,13 +44,12 @@ class Shipper(val cityMap: CityMap): Debuggable {
             if (contract.tradeable == Tradeable.LABOR) {
                 // don't actually SEND anything... we just get $$$
                 building.addInventory(Tradeable.MONEY, contract.quantity)
-                debug("${building.description} sent some ${contract.tradeable} to ${contract.to.description()}")
+                debug { "${building.description} sent some ${contract.tradeable} to ${contract.to.description()}" }
             } else if (contract.tradeable != Tradeable.MONEY) {
                 val howManyTransferred = building.transferInventory(contract.to, contract.tradeable, contract.quantity)
                 building.addInventory(Tradeable.MONEY, Prices.priceForGoods(contract.tradeable, howManyTransferred))
-                debug("${building.description}: We sent ${contract.quantity} ${contract.tradeable} to ${contract.to.description()}")
+                debug {"${building.description}: We sent ${contract.quantity} ${contract.tradeable} to ${contract.to.description()}" }
             }
         }
     }
-
 }

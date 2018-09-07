@@ -1,20 +1,44 @@
+/**
+ * Basic data structures
+ */
 package kotcity.data
 
-import javafx.scene.paint.Color
+import kotcity.data.buildings.Building
 
-enum class TileType(val color: Color) {
-    GROUND(Color.rgb(37, 96, 37)),
-    WATER(Color.DARKBLUE)
+/**
+ * Represents if we have ground or water
+ */
+enum class TileType {
+    GROUND,
+    WATER
 }
 
-enum class BuildingType {
-    ROAD, RESIDENTIAL, COMMERCIAL, INDUSTRIAL, POWER_LINE, POWER_PLANT, CIVIC
+/**
+ * Type of zone, R/C/I
+ */
+enum class Zone {
+    RESIDENTIAL,
+    COMMERCIAL,
+    INDUSTRIAL
 }
 
-enum class Zone(val color: Color) {
-    RESIDENTIAL(Color.DARKGREEN),
-    COMMERCIAL(Color.DARKBLUE),
-    INDUSTRIAL(Color.LIGHTGOLDENRODYELLOW)
-}
+/**
+ * Represents a pair of a building and its location in the city.
+ * @param coordinate (top left) coordinate of building
+ * @param building building we are referring to
+ */
+data class Location(val coordinate: BlockCoordinate, val building: Building) {
+    fun blocks(): List<BlockCoordinate> {
+        return building.buildingBlocks(coordinate)
+    }
 
-data class Location(val coordinate: BlockCoordinate, val building: Building)
+    fun overlaps(other: Location): Boolean {
+        val xOverlaps =
+            (coordinate.x <= other.coordinate.x + other.building.width - 1 && coordinate.x + building.width - 1 >= other.coordinate.x)
+
+        val yOverlaps =
+            (coordinate.y <= other.coordinate.y + other.building.height - 1 && coordinate.y + building.height - 1 >= other.coordinate.y)
+
+        return xOverlaps && yOverlaps
+    }
+}

@@ -1,42 +1,41 @@
-# KotCity 0.45
+# KotCity 0.49.3
 
 [![Build Status](https://semaphoreci.com/api/v1/kotcity/kotcity/branches/master/badge.svg)](https://semaphoreci.com/kotcity/kotcity) [![Build Status](https://travis-ci.org/kotcity/kotcity.svg?branch=master)](https://travis-ci.org/kotcity/kotcity)
 
-## WARNING!
+## ⚠⚠⚠ WARNING! WARNING! WARNING! ⚠⚠⚠
 
-This is _pre alpha_ software with super obvious bugs, rough edges etc. In the spirit of "release early and release often", I am posting the code. This project is far from done but I prefer to get the code out there to be used by whomever. Disagree with the project? Fork it :)
+This is _pre-alpha_ software with super obvious bugs, rough edges etc. In the spirit of "release early and release often", I am posting the code. This project is far from done but I prefer to get the code out there to be used by whomever. Disagree with the project? Fork it :)
 
 ## Obligatory Screenshot
-![KotCity Screenshot](screenshot.jpg?raw=true "Screenshot of the game's UI and an example city")
+![KotCity Screenshot](screenshot.png?raw=true "Screenshot of the game's UI and an example city")
 
 ## Gimme the Software!
 
-A build for Windows, macOS and Linux is available at https://github.com/kotcity/kotcity/releases/tag/0.45
+[Download pre-alpha builds for Windows, macOS and Linux](https://github.com/kotcity/kotcity/releases/).
 
 Java 8+ is required. On Windows it will look for JRE and bring you to download page if you don't have it.
 
-(note, on Ubuntu do apt-get install openjfx)
+(note, on Ubuntu do "apt-get install openjfx")
 
 ## New in this version
 
-95% of these are from my main man @sabieber, who is the KotCity hero
+* Fix for bad collision detection by @sabieber
+* Optimizations to pathfinding
+* Lots of new buildings :)
 
-See our roadmap at https://github.com/kotcity/kotcity/wiki/Roadmap
+## Known bugs
 
-* displaying population
-* buildings construct a little more often
-* tweaked required kots for industrial plant
-* min map size reduced (can play on a 32x32 map if you want now...)
-* right click and drag to pan map
-* update cursor on map pan
-* dynamic framerate adjustment during panning, zooming
-* zoom to mouse position on zoom
+* Railway navigation might be a little fluky, we are working on it.
+* All the other bugs :)
+
+## Unknown bugs
+
+* None
 
 ## Next up!
 
-* Upgrading of zones to level 2 - 5 buildings
-* Pollution
-* Land value
+* Schools
+* Hospitals
 
 ## What is KotCity?
 
@@ -44,7 +43,13 @@ KotCity is a city simulator written in Kotlin inspired by the statistical city s
 
 ## Quick Start
 
-Be on the lookout for super easy to install package soon... until then...
+### How can I change the code or work on the project?
+
+View our [Developer's Guide](https://github.com/kotcity/kotcity/wiki/Developer's-Guide)
+
+[API Documentation](https://cdn.rawgit.com/kotcity/kotcity/6559c68e/docs/kotcity4/index.html)
+
+### Command line-flow
 * Install JDK 1.8+.
 * Clone the project.
 * Run Gradle using ./gradlew run.
@@ -73,7 +78,7 @@ After many years of not seeing any new city builders descend that are satisfacto
 
 ## Community
 
-If you get stuck or want to suggest suggestions, you can discuss it in [our topic on Simtropolis](https://community.simtropolis.com/forums/topic/74899-announcement-kotcity-an-open-source-city-simulator/ "Our topic on Simtropolis"). Chat with the developers at https://gitter.im/kotcity/Lobby.
+If you get stuck or want to suggest suggestions, you can discuss it in [our topic on Simtropolis](https://community.simtropolis.com/forums/topic/74899-announcement-kotcity-an-open-source-city-simulator/). Chat with the developers via [Gitter](https://gitter.im/kotcity/Lobby).
 
 ## Contribution
 
@@ -92,14 +97,12 @@ You can contribute buildings (see assets directory), ideas for the game, help wi
 * As-you-want map size (Can your PC handle 100km^2? Go for it!).
 * Power plants and coverage.
 * Dynamic economy where goods, services and labor are exchanged.
-* Happiness
 
 ## Future Plans
 
 To make a game that "takes over" from SimCity 4. We have a loooooong way to go:
-* Implement land values.
-* Have traffic affect desirability.
-* Bus and rail and stations.
+* Bus stations.
+* Functioning rail :)
 * More types of power plant (hydro, wind, etc).
 * Create buildings that use resources under the ground (coal, etc).
 * Implement "module upgrade" system from SimCity 2013 (upgrades to power plants etc).
@@ -107,6 +110,8 @@ To make a game that "takes over" from SimCity 4. We have a loooooong way to go:
 * Obtain sound effects / music.
 * Add many, many additional types of buildings.
 * Add "mod manager" (think Steam workshop... SC4 has many mods but they really suck to obtain/install).
+
+For a more detailed overview of whats planned see our [roadmap](https://github.com/kotcity/kotcity/wiki/Roadmap).
 
 ## License
 

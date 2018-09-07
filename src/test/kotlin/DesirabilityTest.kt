@@ -3,7 +3,12 @@ import kotcity.automata.DesirabilityUpdater
 import kotcity.automata.Manufacturer
 import kotcity.automata.Shipper
 import kotcity.data.*
-import kotcity.data.assets.AssetManager
+import kotcity.data.AssetManager
+import kotcity.data.Tunable.DEFAULT_DESIRABILITY
+import kotcity.data.buildings.Civic
+import kotcity.data.buildings.Commercial
+import kotcity.data.buildings.Industrial
+import kotcity.data.buildings.Residential
 import kotcity.pathfinding.Pathfinder
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Assertions.fail
@@ -48,17 +53,17 @@ class DesirabilityTest {
         val path = pathfinder.pathToNearestLabor(listOf(BlockCoordinate(3, 10)))
 
         if (path == null) {
-            fail("The path was null...")
+            fail<Nothing>("The path was null...")
         }
 
         val pathToJob = pathfinder.pathToNearestJob(listOf(BlockCoordinate(3, 10)))
 
         if (pathToJob == null) {
-            fail("The path was null...")
+            fail<Nothing>("The path was null...")
         }
 
         // ok now let's make sure the desirability is actually kosher...
-        desirabilityUpdater.update()
+        desirabilityUpdater.tick()
 
         listOf(Zone.INDUSTRIAL, Zone.RESIDENTIAL, Zone.COMMERCIAL).forEach { zt ->
             var nonDefaultFound = false
@@ -84,7 +89,7 @@ class DesirabilityTest {
         cf.signContracts(shuffled = false, maxMillis = 5000)
 
         // ok now let's make sure the desirability is actually kosher...
-        desirabilityUpdater.update()
+        desirabilityUpdater.tick()
 
         assertTrue(slum.currentQuantityForSale(Tradeable.LABOR) != oldSlumValue || slum2.currentQuantityForSale(Tradeable.LABOR) != oldSlum2Value, "Expected labor available to change...")
         assertTrue(factory.totalBeingBought(Tradeable.LABOR) != oldFactoryValue || cornerStore.totalBeingBought(Tradeable.LABOR) != oldCornerStoreValue, "Expected consumed labor to change...")

@@ -1,9 +1,12 @@
 package kotcity.automata
 
 import kotcity.data.*
+import kotcity.data.buildings.Commercial
+import kotcity.data.buildings.Industrial
+import kotcity.data.buildings.Residential
 import kotcity.util.Debuggable
 
-class TaxCollector(val cityMap: CityMap): Debuggable {
+class TaxCollector(val cityMap: CityMap) : Debuggable {
 
     override var debug = false
 
@@ -18,7 +21,7 @@ class TaxCollector(val cityMap: CityMap): Debuggable {
                     taxAmount = 5.0
                 }
                 building.setInventory(Tradeable.MONEY, Math.floor(money - taxAmount).toInt())
-                debug("${building.description} has been taxed $taxAmount")
+                debug { "${building.description} has been taxed $taxAmount" }
             }
         }
     }

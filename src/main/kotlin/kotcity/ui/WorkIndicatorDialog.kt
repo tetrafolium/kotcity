@@ -19,19 +19,16 @@ import javafx.stage.Modality
 import javafx.stage.Stage
 import javafx.stage.StageStyle
 import javafx.stage.Window
+import tornadofx.runLater
 import java.util.function.Consumer
 import java.util.function.ToIntFunction
 
 /**
- * Public domain. Use as you like. No warranties.
+ * Used to show a spinner when we are doing some work...
  * P = Input parameter type. Given to the closure as parameter. Return type is always Integer.
  * (cc) @imifos
  */
-class WorkIndicatorDialog<in P>
-/**
- *
- */
-(owner: Window, label: String) {
+class WorkIndicatorDialog<P>(owner: Window, label: String) {
 
     private var animationWorker: Task<*>? = null
     private var taskWorker: Task<Int>? = null
@@ -70,12 +67,25 @@ class WorkIndicatorDialog<in P>
     }
 
     /**
-     *
+     * Executes the work indicator dialog. If an exception occurs during execution, it will be thrown.
+     * @param parameter An input parameter for the payload function
+     * @param func The payload function which should be executed
      */
-    fun exec(parameter: P, func: ToIntFunction<*>) {
+    fun exec(parameter: P, func: ToIntFunction<P>) {
+        exec(parameter, func, Consumer {throw it} )
+    }
+
+    /**
+     * Executes the work indicator dialog. If an exception occurs during execution, it will not be thrown but passed to
+     * the error handling function
+     * @param parameter An input parameter for the payload function
+     * @param func The payload function which should be executed
+     * @param errFunc The error handling function, which will be called in case an exception occurs
+     */
+    fun exec(parameter: P, func: ToIntFunction<P>, errFunc: Consumer<Exception>) {
         setupDialog()
         setupAnimationThread()
-        setupWorkerThread(parameter, func as ToIntFunction<P>)
+        setupWorkerThread(parameter, func, errFunc)
     }
 
     /**
@@ -117,9 +127,9 @@ class WorkIndicatorDialog<in P>
         animationWorker?.let {
             progressIndicator.progressProperty().bind(it.progressProperty())
 
-//            it.messageProperty().addListener({ observable, oldValue, newValue ->
-//                // Do something when the animation value ticker has changed
-//            })
+            it.messageProperty().addListener({ observable, oldValue, newValue ->
+                // Do something when the animation value ticker has changed
+            })
 
             Thread(animationWorker).start()
         }
@@ -130,7 +140,7 @@ class WorkIndicatorDialog<in P>
     /**
      *
      */
-    private fun setupWorkerThread(parameter: P, func: ToIntFunction<P>) {
+    private fun setupWorkerThread(parameter: P, func: ToIntFunction<P>, errFunc: Consumer<Exception>) {
 
         taskWorker = object : Task<Int>() {
             public override fun call(): Int? {
@@ -147,7 +157,7 @@ class WorkIndicatorDialog<in P>
                 resultValue = taskWorker!!.get()
                 resultNotificationList.add(resultValue)
             } catch (e: Exception) {
-                throw RuntimeException(e)
+                errFunc.accept(e)
             }
 
         }

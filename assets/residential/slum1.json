@@ -3,8 +3,8 @@
   "width": 2,
   "height": 2,
   "name": "slum1",
-  "sprite": "slum1.png",
-  "description": "Slummy Apartment",
+  "sprite": "slum1.svg",
+  "description": "4484 Front Street",
   "level": 1,
   "power_required": 1,
   "production": {

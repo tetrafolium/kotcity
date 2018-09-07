@@ -2,7 +2,7 @@ package kotcity.automata
 
 import kotcity.data.BlockCoordinate
 import kotcity.data.CityMap
-import kotcity.data.PowerPlant
+import kotcity.data.buildings.PowerPlant
 
 class PowerCoverageAutomata(
         coordinate: BlockCoordinate,
@@ -19,12 +19,7 @@ class PowerCoverageAutomata(
         powerAvailable = powerPlant.powerGenerated
     }
 
-    fun done(): Boolean {
-        if (powerAvailable <= 0) {
-            return true
-        }
-        return openList.isEmpty()
-    }
+    fun done() = if (powerAvailable > 0) openList.isEmpty() else true
 
     fun tick() {
         if (done()) {

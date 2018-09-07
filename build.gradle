@@ -1,5 +1,6 @@
 buildscript {
-    ext.kotlin_version = '1.2.30'
+    ext.kotlin_version = '1.2.60'
+    ext.dokka_version = '0.9.16'
 
     repositories {
         mavenCentral()
@@ -8,22 +9,26 @@ buildscript {
 
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.1'
-        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.2'
+        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.2.0'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.4'
+        classpath "org.jetbrains.dokka:dokka-gradle-plugin:${dokka_version}"
     }
 }
 
 plugins {
-    id 'edu.sc.seis.launch4j' version '2.4.3'
+    id 'edu.sc.seis.launch4j' version '2.4.4'
+    id 'se.patrikerdes.use-latest-versions' version '0.2.3'
+    id 'com.github.ben-manes.versions' version '0.20.0'
 }
 
 group 'com.kotcity'
-version '0.43'
+version '0.49.3'
 
 apply plugin: 'kotlin'
 apply plugin: 'org.junit.platform.gradle.plugin'
 apply plugin: 'application'
 apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'org.jetbrains.dokka'
 
 mainClassName = "kotcity.ui.LaunchScreenKt"
 targetCompatibility = 1.8
@@ -37,27 +42,51 @@ repositories {
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    compile 'no.tornado:tornadofx:1.7.15'
+    compile "org.jetbrains.kotlin:kotlin-reflect"
+    testCompile "org.jetbrains.kotlin:kotlin-test"
+    testCompile "org.jetbrains.kotlin:kotlin-test-junit"
+    compile 'no.tornado:tornadofx:1.7.16'
     compile 'com.github.salomonbrys.kotson:kotson:2.5.0'
-    compile 'com.github.davidmoten:rtree:0.8.0.4'
+    compile 'com.github.davidmoten:rtree:0.8.6'
     compile 'com.github.kizitonwose.time:time:1.0.1'
     compile 'javax.vecmath:vecmath:1.5.2'
 
-    compile 'com.github.debop:koda-time:1.2.1'
-    compile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.21'
+    compile 'com.github.debop:koda-time:1.2.2'
+    compile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.24.0'
 
-    compile 'com.github.ben-manes.caffeine:caffeine:2.6.1'
+    compile 'com.github.ben-manes.caffeine:caffeine:2.6.2'
 
-    compile 'com.natpryce:konfig:1.6.1.0'
+    compile 'com.natpryce:konfig:1.6.10.0'
 
     // Optional extensions
-    compile 'com.github.ben-manes.caffeine:guava:2.6.1'
-    compile 'com.github.ben-manes.caffeine:jcache:2.6.1'
+    compile 'com.github.ben-manes.caffeine:guava:2.6.2'
+    compile 'com.github.ben-manes.caffeine:jcache:2.6.2'
 
-    testCompile 'org.junit.jupiter:junit-jupiter-api:5.0.0-M4'
-    testRuntime 'org.junit.jupiter:junit-jupiter-engine:5.0.0-M4'
+    testCompile 'org.junit.jupiter:junit-jupiter-api:5.3.0-M1'
+    testRuntime 'org.junit.jupiter:junit-jupiter-engine:5.3.0-M1'
     // Enable use of the JUnitPlatform Runner within the IDE
-    testCompile 'org.junit.platform:junit-platform-runner:1.0.0-M4'
+    testCompile 'org.junit.platform:junit-platform-runner:1.3.0-M1'
+
+    // https://mvnrepository.com/artifact/org.apache.xmlgraphics/batik-transcoder
+    compile group: 'org.apache.xmlgraphics', name: 'batik-transcoder', version: '1.10'
+
+    // https://mvnrepository.com/artifact/com.twelvemonkeys.imageio/imageio-batik
+    compile group: 'com.twelvemonkeys.imageio', name: 'imageio-batik', version: '3.3.2'
+
+    // https://mvnrepository.com/artifact/org.apache.xmlgraphics/batik-svg-dom
+    compile group: 'org.apache.xmlgraphics', name: 'batik-svg-dom', version: '1.10'
+
+    // https://mvnrepository.com/artifact/org.apache.xmlgraphics/batik-anim
+    compile group: 'org.apache.xmlgraphics', name: 'batik-anim', version: '1.10'
+
+    // https://mvnrepository.com/artifact/org.apache.xmlgraphics/fop
+    compile group: 'org.apache.xmlgraphics', name: 'fop', version: '2.3'
+
+    // https://mvnrepository.com/artifact/org.apache.xmlgraphics/xmlgraphics-commons
+    compile group: 'org.apache.xmlgraphics', name: 'xmlgraphics-commons', version: '2.3'
+
+    compile 'com.github.pvdberg1998:hashkode:1.2.3'
+
 }
 
 compileKotlin {
@@ -68,11 +97,34 @@ compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
 
+test {
+    testLogging {
+        // Make sure output from standard out or error is shown in Gradle output.
+        showStandardStreams = true
+    }
+}
+
 jar {
     manifest {
         attributes 'Main-Class': 'kotcity.ui.LaunchScreenKt'
     }
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+}
+
+dokka {
+    outputFormat = 'html'
+    outputDirectory = "docs"
+
+    linkMapping {
+        // Source directory
+        dir = "src/main/kotlin"
+
+        // URL showing where the source code can be accessed through the web browser
+        url = "https://github.com/kotcity/kotcity/blob/master/src/main/kotlin"
+
+        // Suffix which is used to append the line number to the URL. Use #L for GitHub
+        suffix = "#L"
+    }
 }
 
 junitPlatform {

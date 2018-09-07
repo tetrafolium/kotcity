@@ -3,16 +3,25 @@ package kotcity.automata
 import kotcity.data.*
 import kotcity.pathfinding.Pathfinder
 import kotcity.util.Debuggable
+import kotlinx.coroutines.experimental.*
 
-
-class DesirabilityUpdater(val cityMap: CityMap): Debuggable {
+/**
+ * This class is responsible for going over each zoned tile and figuring out the "Desirability score"... in other words
+ * how badly people want to live there...
+ * @param cityMap The map that we pass in...
+ */
+class DesirabilityUpdater(val cityMap: CityMap) : Debuggable {
     override var debug: Boolean = false
-    set(value) {
-        field = value
-        resourceFinder.debug = debug
-    }
+        set(value) {
+            field = value
+            resourceFinder.debug = debug
+        }
 
+    /**
+     * Distance in tiles that we stop looking for stuff..
+     */
     private val maxDistance = 100
+
     private val shortDistance = 10
     private val mediumDistance = 30
     private val longDistance = 100
@@ -23,76 +32,111 @@ class DesirabilityUpdater(val cityMap: CityMap): Debuggable {
         resourceFinder.debug = debug
     }
 
-    fun update() {
-        // let's update the desirability...
+    /**
+     * Process desirability for the given map
+     */
+    fun tick() {
+        // let's tick the desirability...
+        val jobs = arrayListOf<Deferred<Unit>>()
 
-        debug("Bulldozed Counts: ${cityMap.bulldozedCounts}")
+        runBlocking {
+            cityMap.desirabilityLayers.forEach { desirabilityLayer ->
 
-        cityMap.desirabilityLayers.forEach { desirabilityLayer ->
-
-            // TODO: worry about other levels later...
-            if (desirabilityLayer.level == 1) {
-                when (desirabilityLayer.zoneType) {
-                    Zone.RESIDENTIAL -> updateResidential(desirabilityLayer)
-                    Zone.INDUSTRIAL -> updateIndustrial(desirabilityLayer)
-                    Zone.COMMERCIAL -> updateCommercial(desirabilityLayer)
+                jobs += async {
+                    // TODO: worry about other levels later...
+                    if (desirabilityLayer.level == 1) {
+                        when (desirabilityLayer.zoneType) {
+                            Zone.RESIDENTIAL -> updateResidential(desirabilityLayer)
+                            Zone.INDUSTRIAL -> updateIndustrial(desirabilityLayer)
+                            Zone.COMMERCIAL -> updateCommercial(desirabilityLayer)
+                        }
+                    }
                 }
             }
-
+            jobs.forEach { it.await() }
         }
     }
 
-    private fun updateCommercial(desirabilityLayer: DesirabilityLayer) {
+    private suspend fun updateCommercial(desirabilityLayer: DesirabilityLayer) {
 
         val commercialZones = zoneCoordinates(Zone.COMMERCIAL)
 
+        val jobs = arrayListOf<Job>()
+
         commercialZones.forEach { coordinate ->
 
-            if (!pathFinder.nearbyRoad(listOf(coordinate))) {
-                desirabilityLayer[coordinate] = 0.0
-            } else {
-                val availableGoodsShortDistance = resourceFinder.quantityWantedNearby(Tradeable.GOODS, coordinate, shortDistance)
-                val availableGoodsMediumDistance = resourceFinder.quantityWantedNearby(Tradeable.GOODS, coordinate, mediumDistance)
-                val availableGoodsLongDistance = resourceFinder.quantityWantedNearby(Tradeable.GOODS, coordinate, longDistance)
-                val availableLabor = resourceFinder.quantityForSaleNearby(Tradeable.LABOR, coordinate, maxDistance)
-
-                desirabilityLayer[coordinate] = if (availableGoodsLongDistance == 0 && availableLabor == 0) {
-                    0.0
-                } else {
-                    (availableGoodsShortDistance + availableGoodsMediumDistance + availableGoodsLongDistance + availableLabor).toDouble()
+            jobs += launch {
+                if (!pathFinder.nearbyRoad(listOf(coordinate))) {
+                    desirabilityLayer[coordinate] = Double.MIN_VALUE
+                    return@launch
                 }
+                val availableGoodsShortDistanceScore =
+                    resourceFinder.quantityWantedNearby(Tradeable.GOODS, coordinate, shortDistance) * 0.1
+                val availableGoodsMediumDistanceScore =
+                    resourceFinder.quantityWantedNearby(Tradeable.GOODS, coordinate, mediumDistance) * 0.1
+                val availableGoodsLongDistanceScore =
+                    resourceFinder.quantityWantedNearby(Tradeable.GOODS, coordinate, longDistance) * 0.1
+                val availableLaborScore =
+                    resourceFinder.quantityForSaleNearby(Tradeable.LABOR, coordinate, maxDistance) * 0.1
 
+                val trafficAdjustment = -(cityMap.trafficNearby(coordinate, Tunable.TRAFFIC_RADIUS) * 0.05)
+                val pollutionAdjustment = -(cityMap.pollutionNearby(coordinate, Tunable.POLLUTION_RADIUS) * 0.01)
+                val landValueAdjustment = landValueAdjustment(coordinate)
+
+                desirabilityLayer[coordinate] = (
+                        pollutionAdjustment + availableGoodsShortDistanceScore +
+                                availableGoodsMediumDistanceScore + availableGoodsLongDistanceScore +
+                                availableLaborScore + trafficAdjustment + landValueAdjustment
+                        )
             }
-
         }
+
+        jobs.forEach { it.join() }
 
         trimDesirabilityLayer(desirabilityLayer, commercialZones)
     }
 
-    private fun updateIndustrial(desirabilityLayer: DesirabilityLayer) {
+    /**
+     * For every $20,000 of land value we give one desirability point...
+     * @param coordinate
+     */
+    private fun landValueAdjustment(coordinate: BlockCoordinate) = (cityMap.landValueLayer[coordinate] ?: 0.0) / 50_000
+
+    private suspend fun updateIndustrial(desirabilityLayer: DesirabilityLayer) {
+
+        val jobs = arrayListOf<Job>()
 
         // ok... we just gotta find each block with an industrial zone...
         val industryZones = zoneCoordinates(Zone.INDUSTRIAL)
 
         industryZones.forEach { coordinate ->
-
+            jobs += launch {
+                // if we aren't near a road we are not desirable...
                 if (!pathFinder.nearbyRoad(listOf(coordinate))) {
-                    desirabilityLayer[coordinate] = 0.0
-                } else {
-                    val availableBuyingWholesaleGoodsShortDistance = resourceFinder.quantityWantedNearby(Tradeable.WHOLESALE_GOODS, coordinate, shortDistance)
-                    val availableBuyingWholesaleGoodsMediumDistance = resourceFinder.quantityWantedNearby(Tradeable.WHOLESALE_GOODS, coordinate, mediumDistance)
-                    val availableBuyingWholesaleGoodsLongDistance = resourceFinder.quantityWantedNearby(Tradeable.WHOLESALE_GOODS, coordinate, longDistance)
-                    val availableLabor = resourceFinder.quantityForSaleNearby(Tradeable.LABOR, coordinate, maxDistance)
-
-                    desirabilityLayer[coordinate] = if (availableBuyingWholesaleGoodsLongDistance == 0 && availableLabor == 0) {
-                        0.0
-                    } else {
-                        (availableBuyingWholesaleGoodsShortDistance + availableBuyingWholesaleGoodsMediumDistance + availableBuyingWholesaleGoodsLongDistance + availableLabor).toDouble()
-                    }
-
+                    desirabilityLayer[coordinate] = Double.MIN_VALUE
+                    return@launch
                 }
+                val availableBuyingWholesaleGoodsShortDistanceScore =
+                    resourceFinder.quantityWantedNearby(Tradeable.WHOLESALE_GOODS, coordinate, shortDistance) * 0.1
+                val availableBuyingWholesaleGoodsMediumDistanceScore =
+                    resourceFinder.quantityWantedNearby(Tradeable.WHOLESALE_GOODS, coordinate, mediumDistance) * 0.1
+                val availableBuyingWholesaleGoodsLongDistanceScore =
+                    resourceFinder.quantityWantedNearby(Tradeable.WHOLESALE_GOODS, coordinate, longDistance) * 0.1
+                val availableLaborScore =
+                    resourceFinder.quantityForSaleNearby(Tradeable.LABOR, coordinate, maxDistance) * 0.1
+                val trafficAdjustment = -((cityMap.trafficNearby(coordinate, Tunable.TRAFFIC_RADIUS) * 0.05) / 2)
+                val landValueAdjustment = landValueAdjustment(coordinate)
 
+                desirabilityLayer[coordinate] = (
+                        availableBuyingWholesaleGoodsShortDistanceScore +
+                                availableBuyingWholesaleGoodsMediumDistanceScore +
+                                availableBuyingWholesaleGoodsLongDistanceScore +
+                                availableLaborScore + trafficAdjustment + landValueAdjustment
+                        )
+            }
         }
+
+        jobs.forEach { it.join() }
 
         trimDesirabilityLayer(desirabilityLayer, industryZones)
     }
@@ -102,47 +146,79 @@ class DesirabilityUpdater(val cityMap: CityMap): Debuggable {
         val keysToTrim = mutableListOf<BlockCoordinate>()
         desirabilityLayer.forEach { t, _ ->
             if (!zones.contains(t)) {
+                println("We have to trim $t because it is no longer a zone...")
                 keysToTrim.add(t)
             }
         }
-
         keysToTrim.forEach { desirabilityLayer.remove(it) }
     }
 
-    private fun zoneCoordinates(zoneType: Zone): List<BlockCoordinate> {
-        return cityMap.zoneLayer.toList().filter { it.second == zoneType }.map { it.first }
-    }
+    private fun zoneCoordinates(zoneType: Zone) =
+        cityMap.zoneLayer.toList().filter { it.second == zoneType }.map { it.first }
 
-    // TODO: waaay too slow...
-    private fun updateResidential(desirabilityLayer: DesirabilityLayer) {
-        // we like being near places that NEED labor
-        // we like being near places that PROVIDE goods
+    private suspend fun updateResidential(desirabilityLayer: DesirabilityLayer) {
 
-        val residentialZones = zoneCoordinates(Zone.RESIDENTIAL)
+        val jobs = arrayListOf<Job>()
 
         val population = cityMap.censusTaker.population
 
+        val residentialZones = zoneCoordinates(Zone.RESIDENTIAL)
+
+        // we like being near places that NEED labor
+        // we like being near places that PROVIDE goods
         residentialZones.forEach { coordinate ->
 
-            if (!pathFinder.nearbyRoad(listOf(coordinate))) {
-                desirabilityLayer[coordinate] = 0.0
-            } else {
-                val availableJobsShortDistance = resourceFinder.quantityWantedNearby(Tradeable.LABOR, coordinate, shortDistance)
-                val availableJobsMediumDistance = resourceFinder.quantityWantedNearby(Tradeable.LABOR, coordinate, mediumDistance)
-                val availableJobsLongDistance = resourceFinder.quantityWantedNearby(Tradeable.LABOR, coordinate, longDistance)
-                val availableGoodsShortDistance = resourceFinder.quantityForSaleNearby(Tradeable.GOODS, coordinate, shortDistance)
-                val availableGoodsMediumDistance = resourceFinder.quantityForSaleNearby(Tradeable.GOODS, coordinate, mediumDistance)
-                if (population == 0) {
-                    desirabilityLayer[coordinate] = 0.1
-                } else {
-                    desirabilityLayer[coordinate] = (availableJobsShortDistance + availableJobsMediumDistance + availableJobsLongDistance + availableGoodsShortDistance + availableGoodsMediumDistance).toDouble()
+            jobs += launch {
+                if (!pathFinder.nearbyRoad(listOf(coordinate))) {
+                    desirabilityLayer[coordinate] = Double.MIN_VALUE
+                    return@launch
                 }
 
-            }
+                // if we have less than 20 people we just want to live here...
+                if (population < 20) {
+                    desirabilityLayer[coordinate] = 10.0
+                    return@launch
+                }
 
+                val availableJobsShortDistance =
+                    resourceFinder.quantityWantedNearby(Tradeable.LABOR, coordinate, shortDistance)
+                // every 10 jobs available nearby, we get 1 point...
+                val availableJobsShortDistanceScore = availableJobsShortDistance * 0.1
+
+                val availableJobsMediumDistance =
+                    resourceFinder.quantityWantedNearby(Tradeable.LABOR, coordinate, mediumDistance)
+                // every 10 jobs available nearby, we get 1 point...
+                val availableJobsMediumDistanceScore = availableJobsMediumDistance * 0.1
+
+                val availableJobsLongDistance =
+                    resourceFinder.quantityWantedNearby(Tradeable.LABOR, coordinate, longDistance)
+                val availableJobsLongDistanceScore = availableJobsLongDistance * 0.1
+
+                val availableGoodsShortDistance =
+                    resourceFinder.quantityForSaleNearby(Tradeable.GOODS, coordinate, shortDistance)
+                val availableGoodsShortDistanceScore = availableGoodsShortDistance * 0.1
+
+                val availableGoodsMediumDistance =
+                    resourceFinder.quantityForSaleNearby(Tradeable.GOODS, coordinate, mediumDistance)
+                val availableGoodsMediumDistanceScore = availableGoodsMediumDistance * 0.1
+
+                val trafficAdjustment = -(cityMap.trafficNearby(coordinate, Tunable.TRAFFIC_RADIUS) * 0.01)
+                val pollutionAdjustment = -(cityMap.pollutionNearby(coordinate, Tunable.POLLUTION_RADIUS) * 0.05)
+
+                val landValueAdjustment = landValueAdjustment(coordinate)
+
+                val newResidentialValue = (
+                        trafficAdjustment + pollutionAdjustment + availableJobsShortDistanceScore +
+                                availableJobsMediumDistanceScore + availableJobsLongDistanceScore +
+                                availableGoodsShortDistanceScore + availableGoodsMediumDistanceScore + landValueAdjustment
+                        )
+
+                desirabilityLayer[coordinate] = newResidentialValue
+            }
         }
 
-        trimDesirabilityLayer(desirabilityLayer, residentialZones)
+        jobs.forEach { it.join() }
 
+        trimDesirabilityLayer(desirabilityLayer, residentialZones)
     }
 }
