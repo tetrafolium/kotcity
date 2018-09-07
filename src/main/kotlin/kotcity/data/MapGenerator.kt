@@ -6,7 +6,6 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 import java.util.*
 
-
 class MapGenerator {
 
     private val rng = Random()

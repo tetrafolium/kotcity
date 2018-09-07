@@ -7,7 +7,6 @@ import kotcity.data.Tunable
 import kotcity.ui.Algorithms
 import kotcity.ui.map.CityRenderer
 
-
 class LandValueRenderer(private val cityRenderer: CityRenderer, private val cityMap: CityMap) {
 
     companion object {

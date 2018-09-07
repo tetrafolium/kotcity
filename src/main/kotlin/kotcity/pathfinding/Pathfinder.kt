@@ -269,7 +269,6 @@ class Pathfinder(val cityMap: CityMap) : Debuggable {
         }
 
         return pathToNearestRoad.plus(restOfTheWay)
-
     }
 
     private fun isBuildingAt(coordinate: BlockCoordinate, clazz: KClass<*>): Boolean {
@@ -305,7 +304,6 @@ class Pathfinder(val cityMap: CityMap) : Debuggable {
                     direction
                 )
             }
-
         })
     }
 
@@ -484,7 +482,6 @@ class Pathfinder(val cityMap: CityMap) : Debuggable {
                         closedList.add(destinationNode)
                     }
                 }
-
             }
         }
     }

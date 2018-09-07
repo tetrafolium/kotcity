@@ -26,7 +26,6 @@ class QueryWindowApp : App(QueryWindow::class, KotcityStyles::class) {
         queryWindow.mapAndCoordinate = buildingAndCity
         super.start(stage)
     }
-
 }
 
 fun main(args: Array<String>) {

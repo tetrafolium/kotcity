@@ -18,7 +18,6 @@ import kotcity.util.reorder
 import tornadofx.runLater
 import kotlin.math.pow
 
-
 class CityRenderer(
     private val gameFrame: GameFrame,
     val canvas: CityCanvas,
@@ -76,13 +75,13 @@ class CityRenderer(
 
     private val panListeners: MutableList<(Pair<BlockCoordinate, BlockCoordinate>) -> Unit> = mutableListOf()
 
-    private val sizeChangedListener = {observable: ObservableValue<out Number>, oldValue: Number, newValue: Number -> firePanChanged() }
+    private val sizeChangedListener = { observable: ObservableValue<out Number>, oldValue: Number, newValue: Number -> firePanChanged() }
 
     init {
         mapMinElevation = cityMap.groundLayer.values.map { it.elevation }.min() ?: 0.0
         mapMaxElevation = cityMap.groundLayer.values.map { it.elevation }.max() ?: 0.0
         colorAdjuster = ColorAdjuster(mapMinElevation, mapMaxElevation)
-        canvas.addSizeChangeListener {firePanChanged()}
+        canvas.addSizeChangeListener { firePanChanged() }
     }
 
     // awkward... we need padding to get building off the screen...
@@ -459,11 +458,11 @@ class CityRenderer(
         drawRoad(tx, ty, blockSize, building, Color.web("#424242"))
 
     private fun drawRoad(
-            tx: Double,
-            ty: Double,
-            blockSize: Double,
-            building: Building,
-            fillColor: Color = Color.BLACK
+        tx: Double,
+        ty: Double,
+        blockSize: Double,
+        building: Building,
+        fillColor: Color = Color.BLACK
     ) {
         canvas.graphicsContext2D.fill = fillColor
         canvas.graphicsContext2D.fillRect(tx * blockSize, ty * blockSize, blockSize, blockSize)
@@ -538,12 +537,12 @@ class CityRenderer(
     }
 
     private fun drawBuildingBorder(
-            building: Building,
-            tx: Double,
-            ty: Double,
-            width: Double,
-            height: Double,
-            blockSize: Double
+        building: Building,
+        tx: Double,
+        ty: Double,
+        width: Double,
+        height: Double,
+        blockSize: Double
     ) {
         if (building is Road) {
             return

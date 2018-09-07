@@ -37,7 +37,6 @@ class DesirabilityRenderer(private val cityRenderer: CityRenderer, private val c
                     }
                 }
             }
-
         }
     }
 

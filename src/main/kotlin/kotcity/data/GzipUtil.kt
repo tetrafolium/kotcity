@@ -19,7 +19,6 @@ object GzipUtil {
         } catch (e: IOException) {
             throw RuntimeException("Failed to zip content: ", e)
         }
-
     }
 
     fun uncompress(compressed: ByteArray?): String {
@@ -43,7 +42,6 @@ object GzipUtil {
         } catch (e: IOException) {
             throw RuntimeException("Failed to unzip content: ", e)
         }
-
     }
 
     private fun isZipped(compressed: ByteArray): Boolean {

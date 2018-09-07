@@ -2,7 +2,6 @@ package kotcity.ui.map
 
 import kotcity.ui.ResizableCanvas
 
-
 class CityCanvas : ResizableCanvas() {
     private val sizeChangeListeners = ArrayList<(cityCanvas: CityCanvas) -> Unit>()
 

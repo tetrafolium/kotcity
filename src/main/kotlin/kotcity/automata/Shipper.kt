@@ -48,7 +48,7 @@ class Shipper(val cityMap: CityMap) : Debuggable {
             } else if (contract.tradeable != Tradeable.MONEY) {
                 val howManyTransferred = building.transferInventory(contract.to, contract.tradeable, contract.quantity)
                 building.addInventory(Tradeable.MONEY, Prices.priceForGoods(contract.tradeable, howManyTransferred))
-                debug {"${building.description}: We sent ${contract.quantity} ${contract.tradeable} to ${contract.to.description()}" }
+                debug { "${building.description}: We sent ${contract.quantity} ${contract.tradeable} to ${contract.to.description()}" }
             }
         }
     }

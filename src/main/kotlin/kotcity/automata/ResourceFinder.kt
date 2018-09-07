@@ -128,7 +128,7 @@ class ResourceFinder(val cityMap: CityMap) : Debuggable {
         maxDistance: Int = MAX_RESOURCE_DISTANCE
     ): Pair<TradeEntity, Path>? {
         // OK... we need to find nearby buildings...
-        val buildings =  cityMap.nearestBuildings(sourceBlocks.first(), maxDistance).distinct()
+        val buildings = cityMap.nearestBuildings(sourceBlocks.first(), maxDistance).distinct()
         // now we gotta make sure they got the resource...
         val buildingsWantingResource = buildings.filter { it.building.currentQuantityWanted(tradeable) > 0 }
 

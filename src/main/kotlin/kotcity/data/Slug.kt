@@ -4,7 +4,6 @@ import java.util.Locale
 import java.text.Normalizer
 import java.util.regex.Pattern
 
-
 object Slug {
     private val NONLATIN = Pattern.compile("[^\\w-]")
     private val WHITESPACE = Pattern.compile("[\\s]")

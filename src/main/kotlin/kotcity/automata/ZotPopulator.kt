@@ -29,7 +29,6 @@ class ZotPopulator(val cityMap: CityMap) : Debuggable {
                 }
                 location.building.zots = combinedZots
             }
-
         }
     }
 

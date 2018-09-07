@@ -12,7 +12,6 @@ import java.io.File
 import java.util.function.Consumer
 import java.util.function.ToIntFunction
 
-
 object CityLoader {
     fun loadCity(view: View) {
         val fileChooser = FileChooser()

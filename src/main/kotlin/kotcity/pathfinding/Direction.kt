@@ -10,7 +10,7 @@ val north = BlockCoordinate(0, -1)
 val south = BlockCoordinate(0, 1)
 val east = BlockCoordinate(1, 0)
 val west = BlockCoordinate(-1, 0)
-val stationary = BlockCoordinate(0,0)
+val stationary = BlockCoordinate(0, 0)
 
 enum class Direction {
     NORTH, SOUTH, EAST, WEST, STATIONARY;

@@ -180,6 +180,5 @@ class PathfinderTest {
 
         val trip = pathfinder.tripTo(listOf(fourBelowStart), listOf(oneBelowEnd))
         assertTrue(trip?.blocks()?.count() == 16, "Path from a to b should be length 16.")
-
     }
 }

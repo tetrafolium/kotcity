@@ -18,7 +18,6 @@ import tornadofx.selectedItem
 import java.io.File
 import java.util.function.ToIntFunction
 
-
 class MapGeneratorScreen : View() {
     override val root: BorderPane by fxml("/MapGeneratorScreen.fxml")
 

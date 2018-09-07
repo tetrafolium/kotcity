@@ -105,7 +105,6 @@ class ContactFulfiller(val cityMap: CityMap) : Debuggable {
         }
 
         debug { "$howManyNeedContracts buildings needed contracts and we attempted to create $howManyProcessed" }
-
     }
 
     private fun handleBuilding(location: Location) {
@@ -164,7 +163,6 @@ class ContactFulfiller(val cityMap: CityMap) : Debuggable {
                     done = true
                 }
             }
-
         }
     }
 
@@ -199,7 +197,6 @@ class ContactFulfiller(val cityMap: CityMap) : Debuggable {
                             val quantity = building.currentQuantityWanted(tradeable)
                                 .coerceAtMost(otherTradeEntity.currentQuantityForSale(tradeable))
 
-
                             if (quantity > 0) {
                                 building.createContract(coordinate, otherTradeEntity, tradeable, quantity, pathToOther)
                                 debug { "" }
@@ -220,8 +217,6 @@ class ContactFulfiller(val cityMap: CityMap) : Debuggable {
                     }
                 }
             }
-
-
         }
     }
 

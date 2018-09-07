@@ -62,7 +62,6 @@ data class OutsideTradeEntity(
     override fun currentQuantityForSale(tradeable: Tradeable): Int {
         return nationalTradeEntity.currentQuantityForSale(tradeable)
     }
-
 }
 
 class TradeableCounter {

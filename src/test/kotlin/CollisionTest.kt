@@ -23,11 +23,11 @@ class CollisionTest {
 
         // let's test locations in...
         // slum1 should be at 0,0 0,1, 1,0, 1,1
-        assert(map.locationsAt(BlockCoordinate(0,0 )).first().building == slum1)
-        assert(map.locationsAt(BlockCoordinate(1,0 )).first().building == slum1)
-        assert(map.locationsAt(BlockCoordinate(0,1 )).first().building == slum1)
-        assert(map.locationsAt(BlockCoordinate(1,1 )).first().building == slum1)
+        assert(map.locationsAt(BlockCoordinate(0, 0 )).first().building == slum1)
+        assert(map.locationsAt(BlockCoordinate(1, 0 )).first().building == slum1)
+        assert(map.locationsAt(BlockCoordinate(0, 1 )).first().building == slum1)
+        assert(map.locationsAt(BlockCoordinate(1, 1 )).first().building == slum1)
         // this should not be true...
-        assert(!map.locationsAt(BlockCoordinate(1,2 )).map { it.building}.contains(slum1) )
+        assert(!map.locationsAt(BlockCoordinate(1, 2 )).map { it.building }.contains(slum1) )
     }
 }

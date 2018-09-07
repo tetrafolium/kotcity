@@ -35,7 +35,6 @@ class PollutionRenderer(private val cityRenderer: CityRenderer, private val city
                     }
                 }
             }
-
         }
     }
 
@@ -44,5 +43,4 @@ class PollutionRenderer(private val cityRenderer: CityRenderer, private val city
         val newColor = NEGATIVE_COLOR.interpolate(POSITIVE_COLOR, scaledPollution.toFloat())
         return Color(newColor.red, newColor.green, newColor.blue, 0.5)
     }
-
 }

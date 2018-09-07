@@ -255,7 +255,6 @@ class GameFrame : View(), Debuggable {
         gameSpeed = GameSpeed.FAST
     }
 
-
     fun zoomOut() {
         cityRenderer?.let {
             it.zoom = Math.max(it.zoom - 1, 1.0)
@@ -580,7 +579,6 @@ class GameFrame : View(), Debuggable {
 
     private fun handleToolClick(renderer: CityRenderer, firstBlock: BlockCoordinate, lastBlock: BlockCoordinate? = null) {
 
-
         // TODO: when we try to build buildings we have to displace them N blocks to the top and left...
 
         when (activeTool) {
@@ -668,7 +666,6 @@ class GameFrame : View(), Debuggable {
         map.build(building, coordinate.plus(BlockCoordinate(buildingWidthOffset, buildingHeightOffset)))
     }
 }
-
 
 class GameFrameApp : App(GameFrame::class, KotcityStyles::class) {
     override fun start(stage: Stage) {

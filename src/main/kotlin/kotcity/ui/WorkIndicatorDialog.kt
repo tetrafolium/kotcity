@@ -1,6 +1,5 @@
 package kotcity.ui
 
-
 import javafx.collections.FXCollections
 import javafx.collections.ListChangeListener
 import javafx.collections.ObservableList
@@ -19,7 +18,6 @@ import javafx.stage.Modality
 import javafx.stage.Stage
 import javafx.stage.StageStyle
 import javafx.stage.Window
-import tornadofx.runLater
 import java.util.function.Consumer
 import java.util.function.ToIntFunction
 
@@ -72,7 +70,7 @@ class WorkIndicatorDialog<P>(owner: Window, label: String) {
      * @param func The payload function which should be executed
      */
     fun exec(parameter: P, func: ToIntFunction<P>) {
-        exec(parameter, func, Consumer {throw it} )
+        exec(parameter, func, Consumer { throw it })
     }
 
     /**
@@ -121,7 +119,6 @@ class WorkIndicatorDialog<P>(owner: Window, label: String) {
             override fun call(): Double {
                 return ProgressBar.INDETERMINATE_PROGRESS
             }
-
         }
 
         animationWorker?.let {
@@ -133,8 +130,6 @@ class WorkIndicatorDialog<P>(owner: Window, label: String) {
 
             Thread(animationWorker).start()
         }
-
-
     }
 
     /**
@@ -159,7 +154,6 @@ class WorkIndicatorDialog<P>(owner: Window, label: String) {
             } catch (e: Exception) {
                 errFunc.accept(e)
             }
-
         }
 
         taskWorker!!.setOnSucceeded { e -> eh(e) }
@@ -167,5 +161,4 @@ class WorkIndicatorDialog<P>(owner: Window, label: String) {
 
         Thread(taskWorker).start()
     }
-
 }

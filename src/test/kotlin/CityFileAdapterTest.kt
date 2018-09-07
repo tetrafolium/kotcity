@@ -42,7 +42,7 @@ class CityFileAdapterTest {
         contractFulfiller.debug = true
 
         val jobCenter = assetManager.buildingFor(Civic::class, "job_center")
-        map.build(jobCenter, BlockCoordinate(0,0))
+        map.build(jobCenter, BlockCoordinate(0, 0))
 
         // let's drop some kind of industrial building now...
         val factory = assetManager.buildingFor(Industrial::class, "small_factory")
@@ -61,7 +61,7 @@ class CityFileAdapterTest {
         println("Now loading city")
         val loadedCity = CityFileAdapter.load(tmpFile)
 
-        val loadedJobCenter = loadedCity.cachedLocationsIn(BlockCoordinate(0,0)).first().building
+        val loadedJobCenter = loadedCity.cachedLocationsIn(BlockCoordinate(0, 0)).first().building
         println("Job center: ${loadedJobCenter.summarizeContracts()}")
         println("How much labor: ${loadedJobCenter.currentQuantityForSale(Tradeable.LABOR)}")
 

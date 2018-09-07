@@ -47,7 +47,6 @@ class PollutionUpdater(val cityMap: CityMap) : Debuggable {
                         cityMap.pollutionLayer[it] =
                                 listOf(cityMap.pollutionLayer[it] ?: 0.0, (pollutionValue * DIFFUSION_FACTOR)).average()
                     }
-
                 }
             }
         }

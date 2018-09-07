@@ -165,9 +165,9 @@ interface HasConcreteContacts : HasContracts {
     }
 
     private fun calculateAvailable(
-            hash: Map<Tradeable, Int>,
-            tradeable: Tradeable,
-            filter: (Contract) -> Building?
+        hash: Map<Tradeable, Int>,
+        tradeable: Tradeable,
+        filter: (Contract) -> Building?
     ): Int {
         val inventoryCount = hash[tradeable] ?: 0
         synchronized(contracts) {
@@ -358,7 +358,6 @@ sealed class Building : HasConcreteInventory, HasConcreteContacts {
         return xRange.flatMap { x -> yRange.map { BlockCoordinate(x, it) } }
     }
 
-
     fun zone(): Zone? {
         return when (this) {
             is Residential -> Zone.RESIDENTIAL
@@ -374,11 +373,11 @@ sealed class Building : HasConcreteInventory, HasConcreteContacts {
     }
 
     fun createContract(
-            buildingCoordinate: BlockCoordinate,
-            otherTradeEntity: TradeEntity,
-            tradeable: Tradeable,
-            quantity: Int,
-            path: Path?
+        buildingCoordinate: BlockCoordinate,
+        otherTradeEntity: TradeEntity,
+        tradeable: Tradeable,
+        quantity: Int,
+        path: Path?
     ) {
         val ourLocation = CityTradeEntity(buildingCoordinate, this)
         val newContract = Contract(otherTradeEntity, ourLocation, tradeable, quantity, path)
@@ -422,7 +421,6 @@ class Residential : LoadableBuilding() {
             return (consumesCount - contractCount).toInt()
         }
     }
-
 }
 
 class Commercial : LoadableBuilding()
@@ -536,4 +534,3 @@ sealed class School : Building() {
         override var width: Int = 3
     }
 }
-

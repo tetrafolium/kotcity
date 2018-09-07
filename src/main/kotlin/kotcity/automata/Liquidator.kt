@@ -42,7 +42,6 @@ class Liquidator(val cityMap: CityMap) : Debuggable {
                         ?: throw RuntimeException("Liquidator doesn't know to work with ${location.building::class}!")
                 bulldozedCounts[zone] = (bulldozedCounts[zone] ?: 0) + 1
             }
-
         }
 
         updateBulldozedCount(bulldozedCounts)

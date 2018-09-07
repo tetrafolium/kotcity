@@ -4,7 +4,6 @@ import org.junit.Assert.assertNotNull
 import org.junit.jupiter.api.Test
 import java.io.File
 
-
 class AssetManagerTest {
     @Test
     fun testAssetManagerScan() {
